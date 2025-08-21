@@ -12,7 +12,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	if repeat == "" {
 		return "", fmt.Errorf("the repetition rule is empty")
 	}
-	date, err := time.Parse("20060102", dstart)
+	date, err := time.Parse(DateFormat, dstart)
 	if err != nil {
 		return "", fmt.Errorf("can't convert start date to correct date: %w", err)
 	}
@@ -28,7 +28,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 				break
 			}
 		}
-		return date.Format("20060102"), nil
+		return date.Format(DateFormat), nil
 	case "d":
 		if len(repeatSlice) == 1 {
 			return "", fmt.Errorf("interval in days not specified: %s", repeat)
@@ -49,7 +49,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 				break
 			}
 		}
-		return date.Format("20060102"), nil
+		return date.Format(DateFormat), nil
 	case "w":
 		if len(repeatSlice) == 1 {
 			return "", fmt.Errorf("interval in w not specified: %s", repeat)
@@ -81,11 +81,11 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		for _, v := range weekdays {
 			if v > weekdayDec {
 				date = date.AddDate(0, 0, v-weekdayDec)
-				return date.Format("20060102"), nil
+				return date.Format(DateFormat), nil
 			}
 		}
 		date = date.AddDate(0, 0, 7+weekdays[0]-weekdayDec)
-		return date.Format("20060102"), nil
+		return date.Format(DateFormat), nil
 	case "m":
 		var days, months []int
 		if len(repeatSlice) < 2 || len(repeatSlice) > 3 {
@@ -120,13 +120,13 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 				for _, md := range days {
 					if md > 0 && md == currentDay {
 						if afterNow(date, now) {
-							return date.Format(dateFormat), nil
+							return date.Format(DateFormat), nil
 						}
 					} else if md < 0 {
 						lastDay := getLastDayOfMonth(date)
 						if currentDay == lastDay+md+1 {
 							if afterNow(date, now) {
-								return date.Format(dateFormat), nil
+								return date.Format(DateFormat), nil
 							}
 						}
 					}

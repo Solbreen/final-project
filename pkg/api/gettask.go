@@ -12,6 +12,10 @@ type TaskResp struct {
 }
 
 func getTaskHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		writeJSON(w, TaskResp{Error: "Method not allowed"}, http.StatusMethodNotAllowed)
+		return
+	}
 	id := r.URL.Query().Get("id")
 	if id == "" {
 		writeJSON(w, TaskResp{Error: "ID parameter is required"}, http.StatusBadRequest)

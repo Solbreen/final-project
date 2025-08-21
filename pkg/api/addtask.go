@@ -50,10 +50,10 @@ func checkDate(task *db.Task) error {
 	now := time.Now()
 
 	if task.Date == "" {
-		task.Date = now.Format("20060102")
+		task.Date = now.Format(DateFormat)
 	}
 
-	t, err := time.Parse("20060102", task.Date)
+	t, err := time.Parse(DateFormat, task.Date)
 	if err != nil {
 		return err
 	}
@@ -68,7 +68,7 @@ func checkDate(task *db.Task) error {
 				task.Date = next
 			}
 		} else {
-			task.Date = now.Format("20060102")
+			task.Date = now.Format(DateFormat)
 		}
 	}
 	return nil

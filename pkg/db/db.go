@@ -42,6 +42,10 @@ func Init(dbFile string) error {
 	return nil
 }
 
+func Close() {
+	db.Close()
+}
+
 func AddTask(task *Task) (int64, error) {
 	var id int64
 	query := `

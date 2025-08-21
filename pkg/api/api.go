@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const dateFormat string = "20060102"
+const DateFormat string = "20060102"
 
 func Init() {
 	http.HandleFunc("/api/nextdate", nextDayHandler)
@@ -15,6 +15,10 @@ func Init() {
 }
 
 func nextDayHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		writeJSON(w, TaskResp{Error: "Method not allowed"}, http.StatusMethodNotAllowed)
+		return
+	}
 	nowStr := r.FormValue("now")
 
 	var now time.Time
@@ -22,7 +26,7 @@ func nextDayHandler(w http.ResponseWriter, r *http.Request) {
 		now = time.Now()
 	} else {
 		var err error
-		now, err = time.Parse(dateFormat, nowStr)
+		now, err = time.Parse(DateFormat, nowStr)
 		if err != nil {
 			http.Error(w, "Invalid 'now' date format", http.StatusBadRequest)
 			return

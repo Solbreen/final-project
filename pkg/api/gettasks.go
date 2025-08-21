@@ -24,7 +24,7 @@ func getTasksHandler(w http.ResponseWriter, r *http.Request) {
 
 	if search != "" {
 		if date, err := time.Parse("02.01.2006", search); err == nil {
-			dateStr := date.Format("20060102")
+			dateStr := date.Format(DateFormat)
 			tasks, err = db.GetTasksByDate(dateStr, limit)
 		} else {
 			tasks, err = db.GetTasksBySearch(search, limit)
