@@ -48,27 +48,30 @@ func writeJSON(w http.ResponseWriter, data any, statusCode int) {
 
 func checkDate(task *db.Task) error {
 	now := time.Now()
-
+	todayStr := now.Format(DateFormat)
 	if task.Date == "" {
-		task.Date = now.Format(DateFormat)
+		task.Date = todayStr
 	}
 
-	t, err := time.Parse(DateFormat, task.Date)
+	_, err := time.Parse(DateFormat, task.Date)
 	if err != nil {
 		return err
 	}
-	if t.Before(now) {
-		if task.Repeat != "" {
-			next, err := NextDate(now, task.Date, task.Repeat)
-			if err != nil {
-				return err
-			}
+	if task.Repeat != "" {
+		if task.Date == todayStr {
+			return nil
+		}
 
-			if afterNow(now, t) {
-				task.Date = next
-			}
-		} else {
-			task.Date = now.Format(DateFormat)
+		next, err := NextDate(now, task.Date, task.Repeat)
+		if err != nil {
+			return err
+		}
+		if task.Date < todayStr {
+			task.Date = next
+		}
+	} else {
+		if task.Date < todayStr {
+			task.Date = todayStr
 		}
 	}
 	return nil

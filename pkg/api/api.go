@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const DateFormat string = "20060102"
+const DateFormat string = `20060102`
 
 func Init() {
 	http.HandleFunc("/api/nextdate", nextDayHandler)
